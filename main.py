@@ -5,7 +5,7 @@ from models.client import ClientModel
 
 def main():
     db = Database('Client', ClientModel)
-    print(db.get_by_query(f'ID = 102'))
+    print(db.list())
 
 
 if __name__ == '__main__':
