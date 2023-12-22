@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import decimal
 
+from PyQt5 import QtCore
 ################################################################################
 ## Form generated from reading UI file 'card_uiBlzuFN.ui'
 ##
@@ -56,6 +57,7 @@ class Ui_Card(QWidget):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.image = QLabel(self.image_wrapper)
         self.image.setObjectName(u"image")
+        self.pixmap = QPixmap(f'../media/service_images/{self.service.main_image_path}')
 
         self.verticalLayout.addWidget(self.image)
 
@@ -160,6 +162,7 @@ class Ui_Card(QWidget):
     def retranslateUi(self, card):
         card.setWindowTitle(QCoreApplication.translate("card", u"Form", None))
         self.image.setText("")
+        self.image.setPixmap(self.pixmap)
         self.title_label.setText(self.service.title)
         self.price_label.setText(self.get_price())
         self.discount_label.setText(self.get_discount())
@@ -182,3 +185,4 @@ class Ui_Card(QWidget):
 
     def on_remove_service_button_click(self):
         self.service_db.delete(model_id=int(self.service.id))
+        self.close()

@@ -1,12 +1,13 @@
 
 from database import Database
-from models.client import ClientModel
+from models import ServiceModel
 
 
 def main():
-    # db = Database('Client', ClientModel)
-    # print(db.list())
-    ...
+    db = Database(table_name='Service', model=ServiceModel)
+    db.delete(model_id=1)
+    print(db.get_by_id(id=1))
+
 
 if __name__ == '__main__':
     main()

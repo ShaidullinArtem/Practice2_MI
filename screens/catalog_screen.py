@@ -26,15 +26,14 @@ class CatalogScreen(QMainWindow):
 
         card_layout = QVBoxLayout(self)
         self.Stack = QStackedWidget()
-        self.Stack.addWidget(Cards(card_list=self.services, is_admin=is_admin))
+        self.cards_widget = Cards(card_list=self.services, is_admin=is_admin)
+        self.Stack.addWidget(self.cards_widget)
 
         card_layout.addWidget(self.Stack)
 
         self.ui.scroll_content.setLayout(card_layout)
 
         self.show()
-
-
 
 
 if __name__ == '__main__':
