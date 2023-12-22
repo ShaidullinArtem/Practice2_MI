@@ -1,3 +1,4 @@
+import datetime
 
 from database import Database
 from models import ServiceModel
@@ -5,8 +6,7 @@ from models import ServiceModel
 
 def main():
     db = Database(table_name='Service', model=ServiceModel)
-    db.delete(model_id=1)
-    print(db.get_by_id(id=1))
+    db.create_order(101, 4, datetime.datetime.utcnow())
 
 
 if __name__ == '__main__':

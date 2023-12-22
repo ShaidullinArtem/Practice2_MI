@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import datetime
 import decimal
 
 from PyQt5 import QtCore
@@ -19,9 +20,10 @@ from models import ServiceModel
 
 
 class Ui_Card(QWidget):
-    def __init__(self, service: ServiceModel):
+    def __init__(self, is_admin: bool, service: ServiceModel):
         QWidget.__init__(self)
         self.service = service
+        self.is_admin = is_admin
 
         self.service_db = Database(table_name='Service', model=ServiceModel)
 
@@ -110,6 +112,23 @@ class Ui_Card(QWidget):
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalLayout_3.setSizeConstraint(QLayout.SetDefaultConstraint)
         self.horizontalLayout_3.setContentsMargins(0, 0, 120, 0)
+
+        self.join_to_service_button = QPushButton(self.footer)
+        self.join_to_service_button.setObjectName(u"nav_to_edit_button")
+        self.join_to_service_button.setMaximumSize(QSize(380, 16777215))
+        self.join_to_service_button.setStyleSheet(u"QPushButton {\n"
+                                                  "	border: 1.5px solid #94a2ab;\n"
+                                                  "	color: #94a2ab;\n"
+                                                  "	padding: 5px 10px;\n"
+                                                  "	font-size: 12px;\n"
+                                                  "	font-weight: 600;\n"
+                                                  "}\n"
+                                                  "\n"
+                                                  "QPushButton:hover {\n"
+                                                  "	border: 1.5px solid #cdd6ee;\n"
+                                                  "	color: #cdd6ee;\n"
+                                                  "}")
+
         self.nav_to_edit_button = QPushButton(self.footer)
         self.nav_to_edit_button.setObjectName(u"nav_to_edit_button")
         self.nav_to_edit_button.setMaximumSize(QSize(250, 16777215))
@@ -126,7 +145,7 @@ class Ui_Card(QWidget):
                                               "	color: #cdd6ee;\n"
                                               "}")
 
-        self.horizontalLayout_3.addWidget(self.nav_to_edit_button)
+        self.horizontalLayout_3.addWidget(self.nav_to_edit_button if self.is_admin else self.join_to_service_button)
 
         self.remove_service_button = QPushButton(self.footer)
         self.remove_service_button.setObjectName(u"remove_service_button")
@@ -143,9 +162,13 @@ class Ui_Card(QWidget):
                                                  "	border: 1.5px solid #cdd6ee;\n"
                                                  "	color: #cdd6ee;\n"
                                                  "}")
-        self.remove_service_button.setFlat(False)
-
-        self.horizontalLayout_3.addWidget(self.remove_service_button)
+        if self.is_admin:
+            self.remove_service_button.setFlat(False)
+            self.join_to_service_button.close()
+            self.horizontalLayout_3.addWidget(self.remove_service_button)
+        else:
+            self.nav_to_edit_button.close()
+            self.remove_service_button.close()
 
         self.verticalLayout_2.addWidget(self.footer)
 
@@ -166,6 +189,7 @@ class Ui_Card(QWidget):
         self.title_label.setText(self.service.title)
         self.price_label.setText(self.get_price())
         self.discount_label.setText(self.get_discount())
+        self.join_to_service_button.setText(QCoreApplication.translate("card", u"Записаться", None))
         self.nav_to_edit_button.setText(QCoreApplication.translate("card",
                                                                    u"\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
                                                                    None))
@@ -173,6 +197,8 @@ class Ui_Card(QWidget):
             QCoreApplication.translate("card", u"\u0423\u0434\u0430\u043b\u0438\u0442\u044c", None))
 
         self.remove_service_button.clicked.connect(self.on_remove_service_button_click)
+
+        self.join_to_service_button.clicked.connect(self.join_to_service_button_click)
         # retranslateUi
 
     def get_price(self) -> str:
@@ -184,5 +210,15 @@ class Ui_Card(QWidget):
         return f'* Скидка {int(self.service.discount * 100)}%' if self.service.discount > 0 else ''
 
     def on_remove_service_button_click(self):
-        self.service_db.delete(model_id=int(self.service.id))
+        try:
+            self.service_db.delete(model_id=int(self.service.id))
+        except:
+            pass
         self.close()
+
+    def join_to_service_button_click(self):
+        try:
+            self.service_db.create_order(101, self.service.id, datetime.datetime.utcnow())
+            QMessageBox.about(self, "Успех", "Вы успешно записались на процедуру")
+        except Exception as e:
+            QMessageBox.about(self, "Ошибка", f'Кажется что-то пошло не так {e}')

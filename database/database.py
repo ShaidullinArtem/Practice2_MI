@@ -1,3 +1,4 @@
+import datetime
 from typing import TypeVar, List
 
 import pypyodbc as odbc
@@ -50,6 +51,11 @@ class Database:
 
         cursor.commit()
         return models
+
+    def create_order(self, client_id: int, service_id: int, start_time: datetime):
+        cursor = self.connection.cursor()
+        cursor.execute(f'INSERT INTO ClientService (ClientID, ServiceID, StartTime) VALUES (?, ?, ?)', (client_id, service_id, start_time))
+        cursor.commit()
 
     def delete(self, *, model_id: int):
         cursor = self.connection.cursor()

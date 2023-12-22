@@ -14,5 +14,5 @@ class Cards(QWidget):
 
         cards_layout = QVBoxLayout(self)
         for service in self.card_list:
-            card = Ui_Card(service)
+            card = Ui_Card(self.is_admin, service)
             cards_layout.addWidget(card)
