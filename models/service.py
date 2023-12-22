@@ -1,3 +1,4 @@
+import decimal
 from dataclasses import dataclass
 
 
@@ -8,5 +9,5 @@ class ServiceModel:
     cost: float
     duration_in_seconds: int
     description: str
-    discount: float
+    discount: decimal.Decimal
     main_image_path: str

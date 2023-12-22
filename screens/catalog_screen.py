@@ -1,20 +1,10 @@
 import sys
-from typing import List
+from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QStackedWidget
 
-from PyQt5.QtWidgets import QMainWindow, QApplication, QWidget, QVBoxLayout, QPushButton, QStackedWidget
-
+from database import Database
 from models import ServiceModel
 from ui import Ui_MainWindow_Catalog
-
-
-class Cards(QWidget):
-    def __init__(self, *, card_list: List[ServiceModel], parent=None):
-        QWidget.__init__(self, parent=parent)
-        self.card_list = card_list
-
-        lay = QVBoxLayout(self)
-        for i in range(1):
-            lay.addWidget(QPushButton("{}".format(i)))
+from ui.widgets import Cards
 
 
 class CatalogScreen(QMainWindow):
@@ -22,22 +12,32 @@ class CatalogScreen(QMainWindow):
         super(CatalogScreen, self).__init__()
         self.ui = Ui_MainWindow_Catalog()
         self.ui.setupUi(self)
+        self.ui.scrollArea.horizontalScrollBar().setEnabled(False)
 
         self.is_admin = is_admin
+        self.setWindowTitle(f'Каталог | {"Покупатель" if not self.is_admin else "Администратор"}')
 
-        lay = QVBoxLayout(self)
+        self.service_db = Database(
+            table_name='Service',
+            model=ServiceModel
+        )
+
+        self.services = self.service_db.list()
+
+        card_layout = QVBoxLayout(self)
         self.Stack = QStackedWidget()
-        self.Stack.addWidget(Cards(card_list=[]))
+        self.Stack.addWidget(Cards(card_list=self.services, is_admin=is_admin))
 
-        lay.addWidget(self.Stack)
+        card_layout.addWidget(self.Stack)
 
-        self.ui.container.setLayout(lay)
+        self.ui.scroll_content.setLayout(card_layout)
 
         self.show()
+
+
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = CatalogScreen()
     sys.exit(app.exec_())
-

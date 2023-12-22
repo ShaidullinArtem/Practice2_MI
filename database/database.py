@@ -1,4 +1,4 @@
-from typing import TypeVar
+from typing import TypeVar, List
 
 import pypyodbc as odbc
 from env import Environment
@@ -6,8 +6,8 @@ from env import Environment
 
 class Database:
 
-    def __init__(self, database_name: str, model: object):
-        self.database_name = database_name
+    def __init__(self, *, table_name: str, model: object):
+        self.table_name = table_name
         self.model = model
 
         self.DRIVER_NAME = Environment.DRIVER_NAME
@@ -27,7 +27,7 @@ class Database:
     def list(self):
         models = []
         cursor = self.connection.cursor()
-        cursor.execute(f'SELECT * FROM {self.database_name}')
+        cursor.execute(f'SELECT * FROM {self.table_name}')
         for row in cursor:
             models.append(self.model(*list(row)))
 
@@ -36,14 +36,22 @@ class Database:
 
     def get_by_id(self, id: int):
         cursor = self.connection.cursor()
-        cursor.execute(f'SELECT * FROM {self.database_name} WHERE ID = {id}')
+        cursor.execute(f'SELECT * FROM {self.table_name} WHERE ID = {id}')
         for row in cursor.fetchall():
             cursor.commit()
             return self.model(*list(row))
 
-    def get_by_query(self, query: str):
+    def get_by_query(self, query: str) -> List:
+        models = []
         cursor = self.connection.cursor()
-        cursor.execute(f'SELECT * FROM {self.database_name} WHERE {query}')
+        cursor.execute(f'SELECT * FROM {self.table_name} WHERE {query}')
         for row in cursor.fetchall():
-            cursor.commit()
-            return self.model(*list(row))
+            models.append(self.model(*list(row)))
+
+        cursor.commit()
+        return models
+
+    def delete(self, *, model_id: int):
+        cursor = self.connection.cursor()
+        cursor.execute(f'DELETE FROM {self.table_name} WHERE id = {model_id}')
+        cursor.commit()

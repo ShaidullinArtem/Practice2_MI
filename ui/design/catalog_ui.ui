@@ -16,18 +16,18 @@
     <height>800</height>
    </size>
   </property>
+  <property name="maximumSize">
+   <size>
+    <width>800</width>
+    <height>800</height>
+   </size>
+  </property>
   <property name="windowTitle">
    <string>Каталог</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="styleSheet">
-    <string notr="true">QLabel {
-	color: red;
-}
-
-QLabel:hover {
-	color: blue;
-}</string>
+    <string notr="true"/>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
     <property name="spacing">
@@ -91,7 +91,7 @@ QLabel:hover {
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout">
           <property name="spacing">
-           <number>0</number>
+           <number>10</number>
           </property>
           <property name="leftMargin">
            <number>0</number>
@@ -107,6 +107,18 @@ QLabel:hover {
           </property>
           <item>
            <widget class="QLineEdit" name="search_lineEdit">
+            <property name="minimumSize">
+             <size>
+              <width>300</width>
+              <height>0</height>
+             </size>
+            </property>
+            <property name="maximumSize">
+             <size>
+              <width>300</width>
+              <height>16777215</height>
+             </size>
+            </property>
             <property name="styleSheet">
              <string notr="true">QLineEdit {
 	padding: 10px 5px;
@@ -132,6 +144,142 @@ QLineEdit:focus {
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QFrame" name="price_filter_farme">
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="0,0">
+             <property name="spacing">
+              <number>5</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QListWidget" name="price_filter_listWidget">
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QListWidget {
+	border: 1px solid #53555e;
+	border-radius: 5px;
+	padding: 5px;
+	background: white;
+}
+
+QListWidget:focus {
+	outline: none;
+    border: 2px solid #673ae7;
+}</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="price_filter_label">
+               <property name="styleSheet">
+                <string notr="true">QLabel {
+	color:  #53555e;
+	font-size: 12px;
+	font-weight: 400;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Сортировать по цене: </string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="discount_filter_farme">
+            <property name="layoutDirection">
+             <enum>Qt::RightToLeft</enum>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Raised</enum>
+            </property>
+            <layout class="QHBoxLayout" name="horizontalLayout_3">
+             <property name="spacing">
+              <number>5</number>
+             </property>
+             <property name="leftMargin">
+              <number>0</number>
+             </property>
+             <property name="topMargin">
+              <number>0</number>
+             </property>
+             <property name="rightMargin">
+              <number>0</number>
+             </property>
+             <property name="bottomMargin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QListWidget" name="discount_filter_listWidget">
+               <property name="maximumSize">
+                <size>
+                 <width>150</width>
+                 <height>16777215</height>
+                </size>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QListWidget {
+	border: 1px solid #53555e;
+	border-radius: 5px;
+	padding: 5px;
+	background: white;
+}
+
+QListWidget:focus {
+	outline: none;
+    border: 2px solid #673ae7;
+}</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QLabel" name="discount_filter_label">
+               <property name="styleSheet">
+                <string notr="true">QLabel {
+	color:  #53555e;
+	font-size: 12px;
+	font-weight: 400;
+}
+</string>
+               </property>
+               <property name="text">
+                <string>Фильтрация по скидке: </string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
@@ -143,6 +291,33 @@ QLineEdit:focus {
          <property name="frameShadow">
           <enum>QFrame::Raised</enum>
          </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QScrollArea" name="scrollArea">
+            <property name="styleSheet">
+             <string notr="true">QScrollArea {
+	border: none
+}</string>
+            </property>
+            <property name="widgetResizable">
+             <bool>true</bool>
+            </property>
+            <widget class="QWidget" name="scroll_content">
+             <property name="geometry">
+              <rect>
+               <x>0</x>
+               <y>0</y>
+               <width>750</width>
+               <height>695</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+            </widget>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
