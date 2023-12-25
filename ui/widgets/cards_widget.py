@@ -9,6 +9,7 @@ from ui.card_ui import Ui_Card
 class Cards(QWidget):
     def __init__(self, *, card_list: List[ServiceModel], is_admin: bool, parent=None):
         QWidget.__init__(self, parent=parent)
+        self.setObjectName(u'cards')
         self.card_list = card_list
         self.is_admin = is_admin
 

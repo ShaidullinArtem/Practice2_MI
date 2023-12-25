@@ -1,5 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QStackedWidget
+
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QStackedWidget, QLineEdit
 
 from database import Database
 from models import ServiceModel
@@ -33,7 +35,18 @@ class CatalogScreen(QMainWindow):
 
         self.ui.scroll_content.setLayout(card_layout)
 
+        self.ui.search_lineEdit.textChanged.connect(self.search)
+
         self.show()
+
+    def search(self, state: str):
+        print(self.cards_widget.findChild(QLineEdit, ''))
+        # for widget in self.cards_widget.parentWidget():
+        #     print(widget)
+            # if state.lower() in widget.name.lower():
+            #     widget.show()
+            # else:
+            #     widget.hide()
 
 
 if __name__ == '__main__':

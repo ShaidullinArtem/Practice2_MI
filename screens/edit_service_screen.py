@@ -19,7 +19,6 @@ class EditServiceScreen(QMainWindow):
         self.setWindowTitle("Обновление услуги")
         self.ui.scrollArea.verticalScrollBar().setEnabled(False)
 
-
         self.service = servie
         self.is_admin = is_admin
         self.service_db = Database(
@@ -37,7 +36,6 @@ class EditServiceScreen(QMainWindow):
         self.ui.service_duration_in_seconds_lineEdit.setText(str(self.service.duration_in_seconds))
         self.ui.service_discount_lineEdit.setText(str(self.service.discount))
         self.ui.service_description_lineEdit.setText(str(self.service.description))
-
 
         self.service_image_photo = self.service_photo_db.get_by_query(f'ServiceID = {self.service.id}')
         self.service_images = [self.service.main_image_path] + [path.photo_path for path in self.service_image_photo]
@@ -130,7 +128,6 @@ class EditServiceScreen(QMainWindow):
         elif image_name in self.service_images:
             return self.ui.add_new_image_button.setText('Картинка с таким именем уже существует')
 
-
         try:
             self.service_photo_db.create_service_image(
                 service_id=self.service.id,
@@ -144,6 +141,7 @@ class EditServiceScreen(QMainWindow):
         self.catalog_screen = CatalogScreen(is_admin=self.is_admin)
         self.catalog_screen.show()
         self.close()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
