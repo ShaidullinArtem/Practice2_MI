@@ -11,3 +11,5 @@ class ServiceModel:
     description: str
     discount: decimal.Decimal
     main_image_path: str
+
+

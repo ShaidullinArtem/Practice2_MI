@@ -3,12 +3,12 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QVBoxLayout, QStackedWidg
 
 from database import Database
 from models import ServiceModel
-from ui import Ui_MainWindow_Catalog
-from ui.widgets import Cards
+from ui.catalog_ui import Ui_MainWindow_Catalog
+from ui.widgets import cards_widget
 
 
 class CatalogScreen(QMainWindow):
-    def __init__(self, *, is_admin=False):
+    def __init__(self, *, is_admin=True):
         super(CatalogScreen, self).__init__()
         self.ui = Ui_MainWindow_Catalog()
         self.ui.setupUi(self)
@@ -26,7 +26,7 @@ class CatalogScreen(QMainWindow):
 
         card_layout = QVBoxLayout(self)
         self.Stack = QStackedWidget()
-        self.cards_widget = Cards(card_list=self.services, is_admin=is_admin)
+        self.cards_widget = cards_widget.Cards(card_list=self.services, is_admin=is_admin)
         self.Stack.addWidget(self.cards_widget)
 
         card_layout.addWidget(self.Stack)

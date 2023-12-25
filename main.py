@@ -1,12 +1,15 @@
 import datetime
 
+from _decimal import Decimal
+
 from database import Database
-from models import ServiceModel
+from models import ServiceModel, ServicePhotoModel
 
 
 def main():
-    db = Database(table_name='Service', model=ServiceModel)
-    db.create_order(101, 4, datetime.datetime.utcnow())
+    db = Database(table_name='ServicePhoto', model=ServicePhotoModel)
+
+    print(db.list())
 
 
 if __name__ == '__main__':

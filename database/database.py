@@ -3,6 +3,7 @@ from typing import TypeVar, List
 
 import pypyodbc as odbc
 from env import Environment
+from models import ServiceModel, ServicePhotoModel
 
 
 class Database:
@@ -55,6 +56,26 @@ class Database:
     def create_order(self, client_id: int, service_id: int, start_time: datetime):
         cursor = self.connection.cursor()
         cursor.execute(f'INSERT INTO ClientService (ClientID, ServiceID, StartTime) VALUES (?, ?, ?)', (client_id, service_id, start_time))
+        cursor.commit()
+
+    def create_service_image(self, service_id: int, photo_path: str):
+        cursor = self.connection.cursor()
+        cursor.execute(f'INSERT INTO ServicePhoto (ServiceID, PhotoPath) VALUES (?, ?)', (service_id, photo_path))
+        cursor.commit()
+
+    def update_service(self, new_model: ServiceModel):
+
+        cursor = self.connection.cursor()
+        query = f'UPDATE {self.table_name} SET Title = ?, Cost = ?, DurationInSeconds = ?, Description = ?, Discount = ?, MainImagePath = ? WHERE ID = ?'
+        cursor.execute(query, (
+            new_model.title,
+            new_model.cost,
+            new_model.duration_in_seconds,
+            new_model.description,
+            new_model.discount,
+            new_model.main_image_path,
+            new_model.id
+        ))
         cursor.commit()
 
     def delete(self, *, model_id: int):

@@ -4,8 +4,8 @@ from PyQt5 import QtCore
 from PyQt5.QtWidgets import QMainWindow, QApplication
 
 from env import Environment
-from screens import CatalogScreen
-from ui import Ui_MainWindow_Login
+from catalog_screen import CatalogScreen
+from ui.login_ui import Ui_MainWindow_Login
 from utlis.error import PinCodeEmptyOrInvalidValue
 
 

@@ -17,6 +17,7 @@ from PyQt5.QtWidgets import *
 
 from database import Database
 from models import ServiceModel
+from screens.edit_service_screen import EditServiceScreen
 
 
 class Ui_Card(QWidget):
@@ -59,6 +60,7 @@ class Ui_Card(QWidget):
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.image = QLabel(self.image_wrapper)
         self.image.setObjectName(u"image")
+        self.image.setScaledContents(True)
         self.pixmap = QPixmap(f'../media/service_images/{self.service.main_image_path}')
 
         self.verticalLayout.addWidget(self.image)
@@ -198,6 +200,8 @@ class Ui_Card(QWidget):
 
         self.remove_service_button.clicked.connect(self.on_remove_service_button_click)
 
+        self.nav_to_edit_button.clicked.connect(self.on_edit_service_button_click)
+
         self.join_to_service_button.clicked.connect(self.join_to_service_button_click)
         # retranslateUi
 
@@ -208,6 +212,11 @@ class Ui_Card(QWidget):
 
     def get_discount(self) -> str:
         return f'* Скидка {int(self.service.discount * 100)}%' if self.service.discount > 0 else ''
+
+    def on_edit_service_button_click(self):
+        self.edit_screen = EditServiceScreen(servie=self.service, is_admin=self.is_admin)
+        self.edit_screen.show()
+        self.parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().close()
 
     def on_remove_service_button_click(self):
         try:
