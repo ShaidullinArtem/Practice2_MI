@@ -1,3 +1,4 @@
+import decimal
 from typing import List
 
 from PyQt5.QtCore import QSize, Qt
@@ -65,16 +66,16 @@ class Cards(QWidget):
         self.price_filter_comboBox.setObjectName(u"price_filter_listWidget")
         self.price_filter_comboBox.setMaximumSize(QSize(150, 16777215))
         self.price_filter_comboBox.setStyleSheet(u"QComboBox {\n"
-                                                   "	border: 1px solid #53555e;\n"
-                                                   "	border-radius: 5px;\n"
-                                                   "	padding: 5px;\n"
-                                                   "	background: white;\n"
-                                                   "}\n"
-                                                   "\n"
-                                                   "QComboBox:focus {\n"
-                                                   "	outline: none;\n"
-                                                   "    border: 2px solid #673ae7;\n"
-                                                   "}")
+                                                 "	border: 1px solid #53555e;\n"
+                                                 "	border-radius: 5px;\n"
+                                                 "	padding: 5px;\n"
+                                                 "	background: white;\n"
+                                                 "}\n"
+                                                 "\n"
+                                                 "QComboBox:focus {\n"
+                                                 "	outline: none;\n"
+                                                 "    border: 2px solid #673ae7;\n"
+                                                 "}")
 
         self.horizontalLayout_2.addWidget(self.price_filter_comboBox)
 
@@ -112,16 +113,16 @@ class Cards(QWidget):
         self.discount_filter_comboBox.setObjectName(u"discount_filter_listWidget")
         self.discount_filter_comboBox.setMaximumSize(QSize(150, 16777215))
         self.discount_filter_comboBox.setStyleSheet(u"QComboBox {\n"
-                                                      "	border: 1px solid #53555e;\n"
-                                                      "	border-radius: 5px;\n"
-                                                      "	padding: 5px;\n"
-                                                      "	background: white;\n"
-                                                      "}\n"
-                                                      "\n"
-                                                      "QComboBox:focus {\n"
-                                                      "	outline: none;\n"
-                                                      "    border: 2px solid #673ae7;\n"
-                                                      "}")
+                                                    "	border: 1px solid #53555e;\n"
+                                                    "	border-radius: 5px;\n"
+                                                    "	padding: 5px;\n"
+                                                    "	background: white;\n"
+                                                    "}\n"
+                                                    "\n"
+                                                    "QComboBox:focus {\n"
+                                                    "	outline: none;\n"
+                                                    "    border: 2px solid #673ae7;\n"
+                                                    "}")
 
         self.horizontalLayout_3.addWidget(self.discount_filter_comboBox)
 
@@ -152,18 +153,18 @@ class Cards(QWidget):
         self.nav_to_recored_button = QPushButton(self.records)
         self.nav_to_recored_button.setObjectName(u"nav_to_recored_button")
         self.nav_to_recored_button.setStyleSheet(u"QPushButton {\n"
-                                                "	padding: 10px 15px;\n"
-                                                "	background: #e1e4ff;\n"
-                                                "	color: black;\n"
-                                                "	font-size: 14px;\n"
-                                                "	font-weight: 500;\n"
-                                                "	border: none;\n"
-                                                "	border-radius: 5px;\n"
-                                                "}\n"
-                                                "\n"
-                                                "QPushButton:hover {\n"
-                                                "	color: white;\n"
-                                                "}")
+                                                 "	padding: 10px 15px;\n"
+                                                 "	background: #e1e4ff;\n"
+                                                 "	color: black;\n"
+                                                 "	font-size: 14px;\n"
+                                                 "	font-weight: 500;\n"
+                                                 "	border: none;\n"
+                                                 "	border-radius: 5px;\n"
+                                                 "}\n"
+                                                 "\n"
+                                                 "QPushButton:hover {\n"
+                                                 "	color: white;\n"
+                                                 "}")
 
         self.nav_to_recored_button.setText('Ближайшие записи')
         self.horizontalLayout_4.addWidget(self.nav_to_recored_button)
@@ -208,6 +209,8 @@ class Cards(QWidget):
             sorted_card_list = services_price_sort(index == 1, card_list_copy)
             self.make_cards(sorted_card_list)
 
+        self.on_search_change(self.search_lineEdit.text().strip())
+
     def on_discount_filter_change(self):
         text = self.discount_filter_comboBox.currentText()
         if text.lower().strip() == 'все':
@@ -219,4 +222,11 @@ class Cards(QWidget):
                 discount = item.discount_label.text()[-3:].strip()[:-1]
                 if discount.isnumeric():
                     item.show() if down <= int(discount) <= up else item.hide()
+                elif discount == '' and down == 0:
+                    item.show()
+                else:
+                    item.hide()
+
+
+
 

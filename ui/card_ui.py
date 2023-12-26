@@ -211,7 +211,7 @@ class Ui_Card(QWidget):
         return f'{int(current_price)} рублей за {self.service.duration_in_seconds // 60} минут'
 
     def get_discount(self) -> str:
-        return f'* Скидка {int(self.service.discount * 100)}%' if self.service.discount > 0 else ''
+        return f'* Скидка {int(self.service.discount * 100) if not int(self.service.discount) > 0 else int(self.service.discount)}%' if self.service.discount > 0 else ''
 
     def on_edit_service_button_click(self):
         self.edit_screen = EditServiceScreen(servie=self.service, is_admin=self.is_admin)
