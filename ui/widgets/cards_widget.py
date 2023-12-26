@@ -1,10 +1,12 @@
 from typing import List
+import decimal
 
 from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QHBoxLayout, QLineEdit, QListWidget, QLabel
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QHBoxLayout, QLineEdit, QLabel, QComboBox
 
 from models import ServiceModel
 from ui.card_ui import Ui_Card
+from utlis.service_sort import services_price_sort, services_discount_sort
 
 
 class Cards(QWidget):
@@ -54,22 +56,27 @@ class Cards(QWidget):
         self.horizontalLayout_2.setSpacing(5)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
         self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.price_filter_listWidget = QListWidget(self.price_filter_farme)
-        self.price_filter_listWidget.setObjectName(u"price_filter_listWidget")
-        self.price_filter_listWidget.setMaximumSize(QSize(150, 16777215))
-        self.price_filter_listWidget.setStyleSheet(u"QListWidget {\n"
+        self.price_filter_comboBox = QComboBox(self.price_filter_farme)
+        self.price_filter_comboBox.addItems([
+            'Все',
+            'По возрастнаию',
+            'По убыванию'
+        ])
+        self.price_filter_comboBox.setObjectName(u"price_filter_listWidget")
+        self.price_filter_comboBox.setMaximumSize(QSize(150, 16777215))
+        self.price_filter_comboBox.setStyleSheet(u"QComboBox {\n"
                                                    "	border: 1px solid #53555e;\n"
                                                    "	border-radius: 5px;\n"
                                                    "	padding: 5px;\n"
                                                    "	background: white;\n"
                                                    "}\n"
                                                    "\n"
-                                                   "QListWidget:focus {\n"
+                                                   "QComboBox:focus {\n"
                                                    "	outline: none;\n"
                                                    "    border: 2px solid #673ae7;\n"
                                                    "}")
 
-        self.horizontalLayout_2.addWidget(self.price_filter_listWidget)
+        self.horizontalLayout_2.addWidget(self.price_filter_comboBox)
 
         self.price_filter_label = QLabel(self.price_filter_farme)
         self.price_filter_label.setObjectName(u"price_filter_label")
@@ -93,22 +100,30 @@ class Cards(QWidget):
         self.horizontalLayout_3.setSpacing(5)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.discount_filter_listWidget = QListWidget(self.discount_filter_farme)
-        self.discount_filter_listWidget.setObjectName(u"discount_filter_listWidget")
-        self.discount_filter_listWidget.setMaximumSize(QSize(150, 16777215))
-        self.discount_filter_listWidget.setStyleSheet(u"QListWidget {\n"
+        self.discount_filter_comboBox = QComboBox(self.discount_filter_farme)
+        self.discount_filter_comboBox.addItems([
+            'Все',
+            'от 0 % до 5 %',
+            'от 5 % до 15 %',
+            'от 15 % до 30 %',
+            'от 30 % до 70 %',
+            'от 70 % до 100 %',
+        ])
+        self.discount_filter_comboBox.setObjectName(u"discount_filter_listWidget")
+        self.discount_filter_comboBox.setMaximumSize(QSize(150, 16777215))
+        self.discount_filter_comboBox.setStyleSheet(u"QComboBox {\n"
                                                       "	border: 1px solid #53555e;\n"
                                                       "	border-radius: 5px;\n"
                                                       "	padding: 5px;\n"
                                                       "	background: white;\n"
                                                       "}\n"
                                                       "\n"
-                                                      "QListWidget:focus {\n"
+                                                      "QComboBox:focus {\n"
                                                       "	outline: none;\n"
                                                       "    border: 2px solid #673ae7;\n"
                                                       "}")
 
-        self.horizontalLayout_3.addWidget(self.discount_filter_listWidget)
+        self.horizontalLayout_3.addWidget(self.discount_filter_comboBox)
 
         self.discount_filter_label = QLabel(self.discount_filter_farme)
         self.discount_filter_label.setObjectName(u"discount_filter_label")
@@ -127,7 +142,18 @@ class Cards(QWidget):
 
         self.search_lineEdit.textChanged.connect(self.on_search_change)
 
-        for service in self.card_list:
+        self.price_filter_comboBox.currentIndexChanged.connect(self.on_price_filter_change)
+        self.discount_filter_comboBox.currentIndexChanged.connect(self.on_discount_filter_change)
+
+        self.make_cards(self.card_list)
+
+    def make_cards(self, cards: List[ServiceModel]):
+        for i in reversed(range(self.cards_layout.count())):
+            item = self.cards_layout.itemAt(i).widget()
+            if isinstance(item, Ui_Card):
+                item.setParent(None)
+
+        for service in cards:
             card = Ui_Card(self.is_admin, service)
             self.cards_layout.addWidget(card)
 
@@ -136,3 +162,25 @@ class Cards(QWidget):
             item = self.cards_layout.itemAt(i).widget()
             if isinstance(item, Ui_Card):
                 item.show() if state.lower() in item.title_label.text().lower() else item.hide()
+
+    def on_price_filter_change(self):
+        index = self.price_filter_comboBox.currentIndex()
+        card_list_copy = self.card_list.copy()
+        if index == 0:
+            self.make_cards(self.card_list)
+        else:
+            sorted_card_list = services_price_sort(index == 1, card_list_copy)
+            self.make_cards(sorted_card_list)
+
+    def on_discount_filter_change(self):
+        text = self.discount_filter_comboBox.currentText()
+        if text.lower().strip() == 'все':
+            return self.make_cards(self.card_list)
+        down, up = [int(floor) for floor in text.strip().split() if floor.isnumeric()]
+        for i in range(self.cards_layout.count()):
+            item = self.cards_layout.itemAt(i).widget()
+            if isinstance(item, Ui_Card):
+                discount = item.discount_label.text()[-3:].strip()[:-1]
+                if discount.isnumeric():
+                    item.show() if down <= int(discount) <= up else item.hide()
+
