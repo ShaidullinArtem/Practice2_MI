@@ -35,18 +35,10 @@ class CatalogScreen(QMainWindow):
 
         self.ui.scroll_content.setLayout(card_layout)
 
-        self.ui.search_lineEdit.textChanged.connect(self.search)
+        # self.ui.search_lineEdit.textChanged.connect(self.search)
 
         self.show()
 
-    def search(self, state: str):
-        print(self.cards_widget.findChild(QLineEdit, ''))
-        # for widget in self.cards_widget.parentWidget():
-        #     print(widget)
-            # if state.lower() in widget.name.lower():
-            #     widget.show()
-            # else:
-            #     widget.hide()
 
 
 if __name__ == '__main__':
