@@ -1,6 +1,8 @@
 import decimal
 from dataclasses import dataclass
 
+from models import ClientServiceModel
+
 
 @dataclass
 class ServiceModel:
@@ -11,5 +13,11 @@ class ServiceModel:
     description: str
     discount: decimal.Decimal
     main_image_path: str
+
+
+@dataclass
+class ServiceToClientService:
+    service: ServiceModel
+    record: ClientServiceModel
 
 

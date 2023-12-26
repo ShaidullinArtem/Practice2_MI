@@ -1,3 +1,4 @@
+import decimal
 import sys
 
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLineEdit, QMessageBox, QVBoxLayout, QStackedWidget
@@ -34,7 +35,7 @@ class EditServiceScreen(QMainWindow):
         self.ui.service_title_lineEdit_2.setText(str(self.service.title))
         self.ui.service_cost_lineEdit.setText(str(self.service.cost))
         self.ui.service_duration_in_seconds_lineEdit.setText(str(self.service.duration_in_seconds))
-        self.ui.service_discount_lineEdit.setText(str(self.service.discount))
+        self.ui.service_discount_lineEdit.setText(str(decimal.Decimal(self.service.discount) * 100))
         self.ui.service_description_lineEdit.setText(str(self.service.description))
 
         self.service_image_photo = self.service_photo_db.get_by_query(f'ServiceID = {self.service.id}')

@@ -3,7 +3,7 @@ from typing import TypeVar, List
 
 import pypyodbc as odbc
 from env import Environment
-from models import ServiceModel, ServicePhotoModel
+from models import ServiceModel, ServicePhotoModel, ClientServiceModel
 
 
 class Database:
@@ -47,6 +47,17 @@ class Database:
         models = []
         cursor = self.connection.cursor()
         cursor.execute(f'SELECT * FROM {self.table_name} WHERE {query}')
+        for row in cursor.fetchall():
+            models.append(self.model(*list(row)))
+
+        cursor.commit()
+        return models
+
+    def get_all_records(self, start_date: datetime, end_date: datetime) -> List[ClientServiceModel]:
+        models: List[ClientServiceModel] = []
+        cursor = self.connection.cursor()
+        cursor.execute(f'SELECT * FROM ClientService WHERE StartTime >= ? AND StartTime < ?',
+                       (start_date, end_date))
         for row in cursor.fetchall():
             models.append(self.model(*list(row)))
 

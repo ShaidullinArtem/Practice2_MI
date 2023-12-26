@@ -19,12 +19,3 @@ def services_price_sort(is_ascending: bool, services: List[ServiceModel]) -> Lis
                     services[j] = buf
 
     return services
-
-
-def services_discount_sort(down_floor: float, up_floor: float, services: List[ServiceModel]) -> List[ServiceModel]:
-    for service in services:
-        discount = decimal.Decimal(service.discount)
-        if not discount >= down_floor and  not discount <= up_floor:
-            services.remove(service)
-
-    return services

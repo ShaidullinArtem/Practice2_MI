@@ -1,12 +1,12 @@
 from typing import List
-import decimal
 
 from PyQt5.QtCore import QSize, Qt
-from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QHBoxLayout, QLineEdit, QLabel, QComboBox
+from PyQt5.QtWidgets import QWidget, QVBoxLayout, QFrame, QHBoxLayout, QLineEdit, QLabel, QComboBox, QPushButton
 
 from models import ServiceModel
+from screens.record_screen import RecordScreen
 from ui.card_ui import Ui_Card
-from utlis.service_sort import services_price_sort, services_discount_sort
+from utlis.service_sort import services_price_sort
 
 
 class Cards(QWidget):
@@ -140,12 +140,48 @@ class Cards(QWidget):
 
         self.cards_layout.addWidget(self.search)
 
+        self.records = QFrame(self)
+        self.records.setObjectName(u"records")
+        self.records.setMinimumSize(QSize(0, 40))
+        self.records.setMaximumSize(QSize(700, 40))
+        self.records.setFrameShape(QFrame.NoFrame)
+        self.records.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_4 = QHBoxLayout(self.records)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.nav_to_recored_button = QPushButton(self.records)
+        self.nav_to_recored_button.setObjectName(u"nav_to_recored_button")
+        self.nav_to_recored_button.setStyleSheet(u"QPushButton {\n"
+                                                "	padding: 10px 15px;\n"
+                                                "	background: #e1e4ff;\n"
+                                                "	color: black;\n"
+                                                "	font-size: 14px;\n"
+                                                "	font-weight: 500;\n"
+                                                "	border: none;\n"
+                                                "	border-radius: 5px;\n"
+                                                "}\n"
+                                                "\n"
+                                                "QPushButton:hover {\n"
+                                                "	color: white;\n"
+                                                "}")
+
+        self.nav_to_recored_button.setText('Ближайшие записи')
+        self.horizontalLayout_4.addWidget(self.nav_to_recored_button)
+        self.cards_layout.addWidget(self.records)
+
         self.search_lineEdit.textChanged.connect(self.on_search_change)
 
         self.price_filter_comboBox.currentIndexChanged.connect(self.on_price_filter_change)
         self.discount_filter_comboBox.currentIndexChanged.connect(self.on_discount_filter_change)
 
+        self.nav_to_recored_button.clicked.connect(self.on_nav_to_records_button_click)
+
         self.make_cards(self.card_list)
+
+    def on_nav_to_records_button_click(self):
+        self.records_screen = RecordScreen()
+        self.records_screen.show()
+        self.parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().parentWidget().close()
 
     def make_cards(self, cards: List[ServiceModel]):
         for i in reversed(range(self.cards_layout.count())):
